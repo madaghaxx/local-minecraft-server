@@ -1,0 +1,42 @@
+# =============================================================================
+#  docker-compose.yml – Forge Minecraft Server (rootless Docker)
+#
+#  Usage:
+#    docker compose up -d                           # default IP 10.1.8.4
+#    MINECRAFT_IP=10.1.5.10 docker compose up -d   # custom IP
+#
+#  Or just use the Makefile:
+#    make setup   make start   make stop   make restart   make logs
+# =============================================================================
+
+services:
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft_forge
+    restart: unless-stopped
+    ports:
+      - "25565:25565"
+    volumes:
+      - minecraft_data:/data
+    environment:
+      TYPE: FORGE
+      VERSION: LATEST
+      EULA: "TRUE"
+      MEMORY: "4G"
+      ONLINE_MODE: "FALSE"              # allows TLauncher / cracked clients
+      PAUSE_WHEN_EMPTY_SECONDS: "0"    # never pause – keeps port open
+      DIFFICULTY: normal
+      MAX_PLAYERS: "20"
+      MOTD: "Forge Server"
+      LOG_TIMESTAMP: "true"
+    networks:
+      mc_net:
+        ipv4_address: "${MINECRAFT_IP:-10.1.8.4}"
+
+volumes:
+  minecraft_data:
+    name: minecraft_data
+
+networks:
+  mc_net:
+    external: true      # created by setup_minecraft.sh, not managed by Compose
