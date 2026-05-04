@@ -250,3 +250,9 @@ make console
 # Backup world
 make backup
 ```
+
+## To run minecraft Tlauncher:
+
+```bash
+java -jar TLauncher.jar
+```
